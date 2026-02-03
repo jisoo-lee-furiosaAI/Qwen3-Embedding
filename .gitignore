@@ -4,7 +4,7 @@
 evaluation/results/
 
 # python
-__pycache__/
+evaluation/__pycache__/
 *.pyc
 *.pyo
 *.pyd
