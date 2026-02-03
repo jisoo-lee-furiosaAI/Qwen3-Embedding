@@ -59,7 +59,7 @@ class OpenAITextEmbedder(torch.nn.Module):
         inputs = self.tokenize(sentences, max_length, prompt).to(device)
 
         response = self.client.embeddings.create(
-            input=input_ids,
+            input=inputs,
             model=self.model,
             dimensions=(self.truncate_dim if self.truncate_dim > 0 else None),
             extra_body={"normalize": self.do_norm},
@@ -155,7 +155,6 @@ class Qwen3Embedding(Wrapper):
         self.mp_qsize = mp_qsize
         n_gpu = torch.cuda.device_count()
         self.world_size = n_gpu
-        assert n_gpu > 0, 'woho, no no no!'
         logger.info(f"We have {n_gpu=}, good.")
         self._input_queues = list()
         self._output_queues = list()

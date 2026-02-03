@@ -1,0 +1,17 @@
+# files in evaluation/
+
+# result files
+evaluation/results/
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.pyzwz
+*.pyzwzw
+*.pyzwzwz
