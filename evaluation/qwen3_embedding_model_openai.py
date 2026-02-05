@@ -55,11 +55,13 @@ class OpenAITextEmbedder(torch.nn.Module):
         prompt: str | None = None,
         device: str | torch.device = 'cpu',
     ) -> torch.Tensor:
-        # truncate input sentences to max_length
-        inputs = self.tokenize(sentences, max_length, prompt).to(device)
-        input_body = {k: v.tolist() if hasattr(v, "tolist") else v for k, v in inputs.items()}
+        # vLLM/OpenAI embeddings API expects input to be str or List[str]; server tokenizes.
+        if prompt:
+            inputs = [prompt + s for s in sentences]
+        else:
+            inputs = list(sentences)
         response = self.client.embeddings.create(
-            input=input_body,
+            input=inputs,
             model=self.model,
             dimensions=(self.truncate_dim if self.truncate_dim > 0 else None),
             extra_body={"normalize": self.do_norm},
@@ -254,11 +256,7 @@ class Qwen3Embedding(Wrapper):
         pbar.close()
         results = [result_dict[n] for n in range(len(result_dict))]
         embeddings = torch.cat(results).float()
-        got = embeddings.shape[0]
-        if got != num_texts:
-            raise ValueError(
-                f"Embedding count mismatch: need {num_texts} texts, got {got}"
-            )
+        assert embeddings.shape[0] == num_texts
         embeddings = embeddings.cpu().numpy()
         return embeddings
 
