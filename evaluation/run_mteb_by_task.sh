@@ -14,6 +14,7 @@ python run_mteb.py \
   --model_name ${model_name} \
   --backend "openai" \
   --precision bf16 \
+  --model_kwargs "{\"pooler_type\": \"first\", \"padding_left\": false, \"do_norm\": true, \"use_instruction\": false}" \
   --output_dir results/${model_name} \
   --batch_size 1 \
   --tasks "${tasks}"

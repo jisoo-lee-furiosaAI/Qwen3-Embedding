@@ -28,14 +28,14 @@ class TransformersTextEmbedder(torch.nn.Module):
         pooler_type: str = 'last',
         do_norm: bool = False,
         truncate_dim: int = 0,
-        padding_left: bool = False,
+        padding_left: bool = True,
         attn_type: str = 'causal',
         **kwargs,
     ):
         super().__init__()
         self.base_model = AutoModel.from_pretrained(model, **kwargs)
         self.tokenizer = AutoTokenizer.from_pretrained(model, **kwargs)
-        self.tokenizer.padding_side = "left"
+        self.tokenizer.padding_side = "left" if padding_left else "right"
         self.pooler_type = pooler_type
         self.do_norm = do_norm
         self.truncate_dim = truncate_dim
